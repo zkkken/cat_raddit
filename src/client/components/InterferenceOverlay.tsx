@@ -1,5 +1,12 @@
+/**
+ * 干扰事件覆盖层组件
+ * 显示干扰事件通知和视觉效果
+ * 
+ * @author 开发者B - UI/UX 界面负责人
+ */
+
 import React from 'react';
-import { InterferenceEvent } from '../../shared/types/game';
+import { InterferenceEvent } from '../types/GameTypes';
 
 interface InterferenceOverlayProps {
   interferenceEvent: InterferenceEvent;
@@ -52,6 +59,7 @@ export const InterferenceOverlay: React.FC<InterferenceOverlayProps> = ({
 
   return (
     <>
+      {/* Interference notification */}
       <div className="absolute top-16 left-4 right-4 z-40">
         <div className={`${content.bgColor} text-white p-3 rounded-lg shadow-lg animate-pulse`}>
           <div className="flex items-center justify-center mb-2">
@@ -60,7 +68,9 @@ export const InterferenceOverlay: React.FC<InterferenceOverlayProps> = ({
           </div>
           <p className="text-center text-sm">{content.description}</p>
           {canBeClearedByClick && (
-            <p className="text-center text-xs mt-1 opacity-80">Click the center button to fix!</p>
+            <p className="text-center text-xs mt-1 opacity-80">
+              Click the center button to fix!
+            </p>
           )}
           {interferenceEvent.type === 'controls_reversed' && (
             <p className="text-center text-xs mt-1 opacity-80">
@@ -69,6 +79,8 @@ export const InterferenceOverlay: React.FC<InterferenceOverlayProps> = ({
           )}
         </div>
       </div>
+
+      {/* Enhanced Bubble obstruction effect */}
       {interferenceEvent.type === 'bubble_obstruction' && (
         <div className="absolute inset-0 z-30 pointer-events-none">
           <div className="absolute top-1/4 left-1/4 w-24 h-24 bg-white bg-opacity-85 rounded-full animate-bounce shadow-lg" />
@@ -79,20 +91,6 @@ export const InterferenceOverlay: React.FC<InterferenceOverlayProps> = ({
           <div className="absolute bottom-1/4 right-1/5 w-14 h-14 bg-white bg-opacity-85 rounded-full animate-pulse shadow-md" />
           <div className="absolute top-1/5 right-2/5 w-10 h-10 bg-white bg-opacity-80 rounded-full animate-bounce shadow-md" />
           <div className="absolute top-[218px] left-[25px] w-[340px] h-[39px] bg-white bg-opacity-40 rounded animate-pulse" />
-        </div>
-      )}
-      {canBeClearedByClick && (
-        <div className="absolute top-[667px] left-36 w-[111px] h-28 z-50">
-          <button
-            onClick={onCenterButtonClick}
-            className="w-full h-full relative transition-transform duration-100 hover:scale-105 active:scale-95 animate-pulse"
-          >
-            <img className="w-full h-full object-cover" alt="Center interaction button" src="/button-center-interaction.png" />
-            <div className="absolute inset-0 bg-yellow-400 bg-opacity-30 rounded-lg animate-ping" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-white font-bold text-lg bg-black bg-opacity-50 px-2 py-1 rounded">CLICK!</span>
-            </div>
-          </button>
         </div>
       )}
     </>

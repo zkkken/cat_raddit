@@ -1,9 +1,12 @@
+/**
+ * 干扰事件系统
+ * 负责处理游戏干扰事件的生成和管理
+ * 
+ * @author 开发者A - 游戏核心逻辑负责人
+ */
+
 import { InterferenceEvent, InterferenceType, GameConfig } from '../types/GameTypes';
 
-/**
- * 干扰系统 - 负责游戏干扰事件的生成和管理
- * Interference System - Handles game interference events generation and management
- */
 export class InterferenceSystem {
   private config: GameConfig;
 
@@ -35,14 +38,11 @@ export class InterferenceSystem {
    * Create new interference event
    */
   createInterferenceEvent(type: InterferenceType): InterferenceEvent {
-    // Controls reversed has a fixed 5-second duration, others use config duration
-    const duration = type === 'controls_reversed' ? 5 : this.config.INTERFERENCE_DURATION;
-    
     return {
       type,
       isActive: true,
-      duration,
-      remainingTime: duration,
+      duration: this.config.INTERFERENCE_DURATION,
+      remainingTime: this.config.INTERFERENCE_DURATION,
     };
   }
 
@@ -60,14 +60,30 @@ export class InterferenceSystem {
   }
 
   /**
-   * 应用干扰效果到目标温度
-   * Apply interference effects to target temperature
+   * 应用温度冲击效果
+   * Apply temperature shock effect
    */
   applyTemperatureShock(): number {
-    // 温度冲击：设置具有挑战性但不极端的目标温度
-    // Temperature shock: Set challenging but not extreme target temperatures
-    // 避免0.1和0.9这样的极端值，改为0.2和0.8，保持游戏可玩性
-    return Math.random() > 0.5 ? 0.8 : 0.2;
+    return Math.random() > 0.5 ? 0.9 : 0.1;
+  }
+
+  /**
+   * 检查是否应该触发干扰事件
+   * Check if interference event should be triggered
+   */
+  shouldTriggerInterference(
+    interferenceTimer: number,
+    isInterferenceActive: boolean
+  ): boolean {
+    return interferenceTimer <= 0 && !isInterferenceActive;
+  }
+
+  /**
+   * 检查干扰是否可以通过点击中心按钮清除
+   * Check if interference can be cleared by clicking center button
+   */
+  canBeClearedByClick(type: InterferenceType): boolean {
+    return type !== 'controls_reversed';
   }
 
   /**
@@ -105,24 +121,5 @@ export class InterferenceSystem {
           bgColor: 'bg-red-500',
         };
     }
-  }
-
-  /**
-   * 检查是否应该触发干扰事件
-   * Check if interference event should be triggered
-   */
-  shouldTriggerInterference(
-    interferenceTimer: number,
-    isInterferenceActive: boolean
-  ): boolean {
-    return interferenceTimer <= 0 && !isInterferenceActive;
-  }
-
-  /**
-   * 检查干扰是否可以通过点击中心按钮清除
-   * Check if interference can be cleared by clicking center button
-   */
-  canBeClearedByClick(type: InterferenceType): boolean {
-    return type !== 'controls_reversed';
   }
 }

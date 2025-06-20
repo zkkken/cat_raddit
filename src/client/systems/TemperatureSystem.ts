@@ -77,34 +77,4 @@ export class TemperatureSystem {
   ): number {
     return Math.abs(currentTemperature - targetTemperature);
   }
-
-  /**
-   * 计算温度偏差程度
-   * @param currentTemperature 当前温度
-   * @param targetTemperature 目标温度
-   * @returns 偏差程度 (0-1，0表示完全匹配)
-   */
-  getTemperatureDeviation(currentTemperature: number, targetTemperature: number): number {
-    return Math.abs(currentTemperature - targetTemperature);
-  }
-
-  /**
-   * 获取温度状态描述
-   * @param currentTemperature 当前温度
-   * @param targetTemperature 目标温度
-   * @param toleranceWidth 容忍宽度
-   * @returns 温度状态描述
-   */
-  getTemperatureStatus(
-    currentTemperature: number, 
-    targetTemperature: number, 
-    toleranceWidth: number
-  ): 'perfect' | 'good' | 'cold' | 'hot' {
-    const deviation = this.getTemperatureDeviation(currentTemperature, targetTemperature);
-    
-    if (deviation <= toleranceWidth * 0.3) return 'perfect';
-    if (deviation <= toleranceWidth) return 'good';
-    
-    return currentTemperature < targetTemperature ? 'cold' : 'hot';
-  }
 }

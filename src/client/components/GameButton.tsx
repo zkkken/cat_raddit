@@ -1,3 +1,10 @@
+/**
+ * 游戏按钮组件
+ * 支持图片和文字的可复用按钮组件
+ * 
+ * @author 开发者B - UI/UX 界面负责人
+ */
+
 import React, { useState } from 'react';
 
 interface GameButtonProps {
@@ -48,8 +55,15 @@ export const GameButton: React.FC<GameButtonProps> = ({
     >
       {shouldUseImage ? (
         <>
-          <img src={imageSrc!} alt="Button" className="w-full h-full object-cover" onError={handleImageError} />
-          <div className="absolute inset-0 flex items-center justify-center">{children}</div>
+          <img
+            src={imageSrc!}
+            alt="Button"
+            className="w-full h-full object-cover"
+            onError={handleImageError}
+          />
+          <div className="absolute inset-0 flex items-center justify-center">
+            {children}
+          </div>
         </>
       ) : (
         children

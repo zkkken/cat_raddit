@@ -1,25 +1,18 @@
 /**
  * 游戏类型定义
  * Game Type Definitions
+ * 
+ * @author 全团队共享
  */
 
 export type GameStatus = 'playing' | 'success' | 'failure' | 'paused';
-
-export type InterferenceType = 
-  | 'none'
-  | 'controls_reversed'
-  | 'temperature_shock'
-  | 'bubble_obstruction'
-  | 'speed_change'
-  | 'target_shift'
-  | 'comfort_drain';
+export type InterferenceType = 'controls_reversed' | 'temperature_shock' | 'bubble_obstruction' | 'none';
 
 export interface InterferenceEvent {
   type: InterferenceType;
   isActive: boolean;
   duration: number;
   remainingTime: number;
-  intensity: number;
 }
 
 export interface GameState {
@@ -35,7 +28,6 @@ export interface GameState {
   interferenceEvent: InterferenceEvent;
   interferenceTimer: number;
   isControlsReversed: boolean;
-  speedMultiplier: number;
 }
 
 export interface GameConfig {
@@ -53,15 +45,12 @@ export interface GameConfig {
   INTERFERENCE_DURATION: number;
 }
 
-export interface InterferenceEffectInfo {
-  icon: string;
-  title: string;
-  description: string;
-  bgColor: string;
-}
-
-export interface InterferenceConfig {
-  duration: number;
-  intensity: number;
-  effectInfo: InterferenceEffectInfo;
+// 图片资源配置
+export interface ImageAssets {
+  background: string | null;
+  avatarBad: string | null;
+  avatarHappy: string | null;
+  buttonMinus: string | null;
+  buttonPlus: string | null;
+  buttonCenter: string | null;
 }

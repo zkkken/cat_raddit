@@ -1,3 +1,10 @@
+/**
+ * 进度条组件
+ * 可复用的进度条UI组件
+ * 
+ * @author 开发者B - UI/UX 界面负责人
+ */
+
 import React from 'react';
 
 interface ProgressBarProps {
@@ -15,21 +22,18 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   backgroundColor = '#e5e7eb',
   vertical = false,
 }) => {
-  const clampedValue = Math.max(0, Math.min(1, value));
+  const percentage = Math.max(0, Math.min(100, value * 100));
 
   return (
-    <div
-      className={`relative overflow-hidden rounded ${className}`}
+    <div 
+      className={`relative rounded-sm overflow-hidden ${className}`}
       style={{ backgroundColor }}
     >
       <div
-        className="transition-all duration-100 ease-out"
+        className="h-full transition-all duration-200 ease-out"
         style={{
+          width: `${percentage}%`,
           backgroundColor: barColor,
-          [vertical ? 'height' : 'width']: `${clampedValue * 100}%`,
-          [vertical ? 'width' : 'height']: '100%',
-          [vertical ? 'position' : '']: vertical ? 'absolute' : '',
-          [vertical ? 'bottom' : '']: vertical ? '0' : '',
         }}
       />
     </div>
