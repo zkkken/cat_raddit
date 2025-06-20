@@ -5,9 +5,9 @@
  * @author 开发者B - UI/UX 界面负责人
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { GameState, GameConfig, ImageAssets } from '../types/GameTypes';
-import { GameStateManager } from '../systems/GameStateManager';
+import React from 'react';
+import { GameConfig, ImageAssets } from '../types/GameTypes';
+import { useGameState } from '../hooks/useGameState';
 import { ProgressBar } from './ProgressBar';
 import { GameButton } from './GameButton';
 import { GameOverlay } from './GameOverlay';
@@ -41,78 +41,19 @@ const IMAGE_ASSETS: ImageAssets = {
 };
 
 export const GameInterface: React.FC = () => {
-  // 创建游戏状态管理器实例
-  const [gameStateManager] = useState(() => new GameStateManager(GAME_CONFIG));
-  
-  // 初始化游戏状态
-  const [gameState, setGameState] = useState<GameState>(() => 
-    gameStateManager.createInitialState()
-  );
-
-  // Track current round for timer reduction
-  const [currentRound, setCurrentRound] = useState(1);
-
-  // Temperature control handlers
-  const handlePlusPress = useCallback(() => {
-    setGameState(prev => ({ ...prev, isPlusHeld: true }));
-  }, []);
-
-  const handlePlusRelease = useCallback(() => {
-    setGameState(prev => ({ ...prev, isPlusHeld: false }));
-  }, []);
-
-  const handleMinusPress = useCallback(() => {
-    setGameState(prev => ({ ...prev, isMinusHeld: true }));
-  }, []);
-
-  const handleMinusRelease = useCallback(() => {
-    setGameState(prev => ({ ...prev, isMinusHeld: false }));
-  }, []);
-
-  // Center button handler for interference events
-  const handleCenterButtonClick = useCallback(() => {
-    setGameState(prev => gameStateManager.handleCenterButtonClick(prev));
-  }, [gameStateManager]);
-
-  // Reset game
-  const resetGame = useCallback(() => {
-    setCurrentRound(1);
-    const newConfig = { ...GAME_CONFIG, GAME_DURATION: 30 };
-    gameStateManager.updateConfig(newConfig);
-    setGameState(gameStateManager.resetGameState());
-  }, [gameStateManager]);
-
-  // Start next round
-  const startNextRound = useCallback(() => {
-    const nextRound = currentRound + 1;
-    const newDuration = Math.max(10, 30 - ((nextRound - 1) * 10));
-    const newConfig = { ...GAME_CONFIG, GAME_DURATION: newDuration };
-    
-    setCurrentRound(nextRound);
-    gameStateManager.updateConfig(newConfig);
-    setGameState(gameStateManager.resetGameState());
-  }, [currentRound, gameStateManager]);
-
-  // Main game loop
-  useEffect(() => {
-    if (gameState.gameStatus !== 'playing') return;
-
-    const gameLoop = setInterval(() => {
-      setGameState(prevState => {
-        const deltaTime = 1/60;
-        return gameStateManager.updateGameState(prevState, deltaTime);
-      });
-    }, 1000/60);
-
-    return () => clearInterval(gameLoop);
-  }, [gameState.gameStatus, gameStateManager]);
-
-  // Format time as MM:SS
-  const formatTime = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
+  // 使用游戏状态Hook
+  const {
+    gameState,
+    currentRound,
+    handlePlusPress,
+    handlePlusRelease,
+    handleMinusPress,
+    handleMinusRelease,
+    handleCenterButtonClick,
+    resetGame,
+    startNextRound,
+    formatTime,
+  } = useGameState(GAME_CONFIG);
 
   // 背景样式
   const backgroundStyle = USE_IMAGES && IMAGE_ASSETS.background 
